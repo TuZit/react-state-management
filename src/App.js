@@ -1,5 +1,6 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import { Link } from "react-router-dom";
 
 function App() {
   return (
@@ -13,11 +14,28 @@ function App() {
           className="App-link"
           href="https://reactjs.org"
           target="_blank"
-          rel="noopener noreferrer"
-        >
+          rel="noopener noreferrer">
           Learn React
         </a>
       </header>
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          padding: "20px",
+          justifyContent: "center",
+          gap: "16px",
+        }}>
+        <Link to={"/context-api"}>Context API</Link>
+        <Link style={{ marginRight: "16px" }} to={"/redux"}>
+          Redux
+        </Link>
+        <Link style={{ marginRight: "16px" }} to={"/redux-toolkit"}>
+          Redux Toolkit
+        </Link>
+        <Link to={"/zustand"}>Zustand</Link>
+      </div>
     </div>
   );
 }
