@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useReducer } from "react";
+import React, { createContext, useContext, useReducer, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
 // 1. Định nghĩa trạng thái ban đầu và reducer
-const initialState = { count: 0 };
+const initialState = { count: 0, posts: [] };
 
 function reducer(state, action) {
   switch (action.type) {
@@ -46,6 +46,7 @@ const CounterContext = createContext();
 // 3. Tạo một Provider Component
 function CounterProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [myCount, setMyCount] = useState(1);
 
   // Async actions for posts
   const fetchPosts = async () => {
@@ -97,6 +98,8 @@ function CounterProvider({ children }) {
         addPost,
         updatePost,
         deletePost,
+        myCount,
+        setMyCount,
       }}>
       {children}
     </CounterContext.Provider>
@@ -114,13 +117,28 @@ function useCounter() {
 
 // 5. Component sử dụng context
 function Counter() {
-  const { state, dispatch, fetchPosts, addPost, updatePost, deletePost } =
-    useCounter();
+  const {
+    state,
+    dispatch,
+    fetchPosts,
+    addPost,
+    updatePost,
+    deletePost,
+    myCount,
+    setMyCount,
+  } = useCounter();
+
+  // const context = useContext(CounterContext);
+  // const { state, dispatch, fetchPosts, addPost, updatePost, deletePost } =
+  //   context;
+
   const [newPostTitle, setNewPostTitle] = React.useState("");
   const [newPostContent, setNewPostContent] = React.useState("");
   const [editPostId, setEditPostId] = React.useState(null);
   const [editPostTitle, setEditPostTitle] = React.useState("");
   const [editPostContent, setEditPostContent] = React.useState("");
+
+  console.log("shiba", state);
 
   React.useEffect(() => {
     fetchPosts();
@@ -159,7 +177,7 @@ function Counter() {
       <h2>Posts</h2>
       {state.loading && <p>Loading posts...</p>}
       {state.error && <p style={{ color: "red" }}>Error: {state.error}</p>}
-      {!state.loading && state.posts.length === 0 && <p>No posts found.</p>}
+      {!state.loading && state?.posts?.length === 0 && <p>No posts found.</p>}
       <ul>
         {state.posts.map((post) => (
           <li key={post.id}>

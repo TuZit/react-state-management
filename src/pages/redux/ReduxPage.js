@@ -135,12 +135,14 @@ const mapDispatchToProps = {
 
 // Kết nối component với Redux store
 const ConnectedCounter = connect(mapStateToProps, mapDispatchToProps)(Counter);
+// const Home1 = connect(mapStateToProps, mapDispatchToProps)(Home1);
 
 // Component trang cuối cùng, chứa Redux Provider
 function ReduxPage() {
   return (
     <Provider store={store}>
       <ConnectedCounter />
+      {/* <Home1 /> */}
     </Provider>
   );
 }

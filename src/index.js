@@ -7,16 +7,20 @@ import ZustandPage from "./pages/zustand/ZustandPage";
 import ReduxToolkitPage from "./pages/redux-toolkit/ReduxToolkitPage";
 import ReduxPage from "./pages/redux/ReduxPage";
 import ContextPage from "./pages/context-api/ContextPage";
+import { Provider } from "react-redux";
+import { store } from "./pages/redux-toolkit/store";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<App />} />
-      <Route path="/context-api" element={<ContextPage />} />
-      <Route path="/zustand" element={<ZustandPage />} />
-      <Route path="/redux" element={<ReduxPage />} />
-      <Route path="/redux-toolkit" element={<ReduxToolkitPage />} />
-    </Routes>
-  </BrowserRouter>
+  <Provider store={store}>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/context-api" element={<ContextPage />} />
+        <Route path="/zustand" element={<ZustandPage />} />
+        <Route path="/redux" element={<ReduxPage />} />
+        <Route path="/redux-toolkit" element={<ReduxToolkitPage />} />
+      </Routes>
+    </BrowserRouter>
+  </Provider>
 );
