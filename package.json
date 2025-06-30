@@ -4,12 +4,15 @@
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
+    "@tanstack/react-query": "^5.81.5",
+    "@tanstack/react-query-devtools": "^5.81.5",
+    "axios": "^1.7.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "axios": "^1.7.2",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.6.2",
     "react-scripts": "5.0.1",
+    "swr": "^2.3.3",
     "web-vitals": "^2.1.4",
     "zustand": "^5.0.6"
   },

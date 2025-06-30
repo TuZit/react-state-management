@@ -27,6 +27,10 @@ function App() {
             Redux Toolkit
           </Link>
           <Link to={"/zustand"}>Zustand</Link>
+
+          <Link to={"/swr"}>SWR</Link>
+          <Link to={"/react-query"}>React Query</Link>
+          <Link to={"/rtk-query"}>RTK Query</Link>
         </div>
 
         <img src={logo} className="App-logo" alt="logo" />
