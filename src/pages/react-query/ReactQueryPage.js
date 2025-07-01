@@ -66,6 +66,7 @@ const deletePost = async (id) => {
 
 function PostsManager() {
   const queryClient = useQueryClient();
+
   const {
     data: posts,
     error,
@@ -85,6 +86,9 @@ function PostsManager() {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       setNewPostTitle("");
       setNewPostContent("");
+    },
+    onError: (error) => {
+      console.error("Error adding post:", error);
     },
   });
 

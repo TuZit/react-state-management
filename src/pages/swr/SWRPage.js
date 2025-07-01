@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useSWR, { useSWRConfig } from "swr";
 
@@ -13,10 +13,11 @@ function SWRPage() {
     data: posts,
     error,
     mutate,
+    isLoading,
   } = useSWR(apiUrl, fetcher, {
     revalidateOnFocus: true,
     revalidateOnReconnect: true,
-    // refreshInterval: 60,
+    refreshInterval: 60000,
   });
 
   const [newPostTitle, setNewPostTitle] = useState("");
@@ -87,7 +88,7 @@ function SWRPage() {
     try {
       await axios.put(`${apiUrl}/${editPostId}`, updatedPost);
       // Revalidate để đảm bảo dữ liệu đồng bộ
-      mutate();
+      // mutate();
     } catch (err) {
       console.error("Error updating post:", err);
       // Rollback on error
@@ -97,6 +98,31 @@ function SWRPage() {
 
   if (error) return <div>Failed to load posts.</div>;
   if (!posts) return <div>Loading...</div>;
+
+  const controller = new AbortController();
+  const testFetching = async () => {
+    try {
+      const data = await axios.get(apiUrl, {
+        signal: controller.signal,
+      });
+      console.log(data);
+    } catch (error) {
+      if (axios.isCancel(error)) {
+        console.log("Request was canceled:", error.message);
+      } else {
+        console.error("Error:", error);
+      }
+    }
+  };
+
+  // Hủy request sau 2 giây
+  setTimeout(() => {
+    controller.abort();
+  }, 2000);
+
+  // useEffect(() => {
+  //   testFetching();
+  // }, []);
 
   return (
     <div>

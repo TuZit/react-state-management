@@ -1,15 +1,36 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import axiosInstance from "../../lib/axios";
 
-const apiUrl = "http://localhost:3001";
+const axiosBaseQuery =
+  ({ baseUrl } = { baseUrl: "" }) =>
+  async ({ url, method, data, params }) => {
+    try {
+      const result = await axiosInstance({
+        url: baseUrl + url,
+        method,
+        data,
+        params,
+      });
+      return { data: result.data };
+    } catch (axiosError) {
+      const err = axiosError;
+      return {
+        error: {
+          status: err.response?.status,
+          data: err.response?.data || err.message,
+        },
+      };
+    }
+  };
 
 // Định nghĩa một service sử dụng base URL và các endpoints
 export const postsApi = createApi({
   reducerPath: "postsApi",
-  baseQuery: fetchBaseQuery({ baseUrl: apiUrl }),
+  baseQuery: axiosBaseQuery({ baseUrl: "" }), // Sử dụng axiosBaseQuery, baseURL đã được set trong axios.js
   tagTypes: ["Post"], // Dùng cho caching và invalidation
   endpoints: (builder) => ({
     getPosts: builder.query({
-      query: () => "posts",
+      query: () => ({ url: "/posts", method: "GET" }),
       // Cung cấp một tag cho mỗi post và một tag 'LIST' chung.
       providesTags: (result) =>
         result
@@ -21,25 +42,25 @@ export const postsApi = createApi({
     }),
     addPost: builder.mutation({
       query: (newPost) => ({
-        url: "posts",
+        url: "/posts",
         method: "POST",
-        body: newPost,
+        data: newPost,
       }),
       // Làm mất hiệu lực tag 'LIST' để query getPosts được fetch lại
       invalidatesTags: [{ type: "Post", id: "LIST" }],
     }),
     updatePost: builder.mutation({
       query: ({ id, ...patch }) => ({
-        url: `posts/${id}`,
+        url: `/posts/${id}`,
         method: "PUT",
-        body: patch,
+        data: patch,
       }),
       // Làm mất hiệu lực tag của post cụ thể này
       invalidatesTags: (result, error, { id }) => [{ type: "Post", id }],
     }),
     deletePost: builder.mutation({
       query: (id) => ({
-        url: `posts/${id}`,
+        url: `/posts/${id}`,
         method: "DELETE",
       }),
       // Làm mất hiệu lực tag của post cụ thể này
